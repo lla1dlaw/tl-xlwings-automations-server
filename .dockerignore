@@ -1,0 +1,14 @@
+.git
+.gitignore
+.python-version
+.venv
+.env
+.env.*
+*.pyc
+__pycache__
+*.egg-info
+.DS_Store
+certs/
+Dockerfile
+.dockerignore
+*.local.*

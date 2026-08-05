@@ -1,0 +1,464 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+custom_functions/
+  __init__.py
+  functions.py
+custom_scripts/
+  __init__.py
+  scripts.py
+src/
+  tl_xlwings_automations/
+    __init__.py
+static/
+  css/
+    style.css
+  js/
+    main.js
+templates/
+  manifest.xml
+  taskpane.html
+.dockerignore
+.gitignore
+.python-version
+docker-compose.yaml
+Dockerfile
+pyproject.toml
+README.md
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="custom_functions/__init__.py">
+# Import your custom functions here
+from .functions import *
+</file>
+
+<file path="custom_functions/functions.py">
+from xlwings import func
+
+
+@func
+def hello(name):
+    return f"Hello {name}!"
+</file>
+
+<file path="custom_scripts/__init__.py">
+# Import your custom scripts here
+from .scripts import *
+</file>
+
+<file path="custom_scripts/scripts.py">
+import xlwings as xw
+from xlwings import script
+
+
+@script
+def hello_world(book: xw.Book):
+    sheet = book.sheets.active
+    cell = sheet["A1"]
+    if cell.value == "Hello xlwings!":
+        cell.value = "Bye xlwings!"
+    else:
+        cell.value = "Hello xlwings!"
+</file>
+
+<file path="src/tl_xlwings_automations/__init__.py">
+def main() -> None:
+    print("Hello from tl-xlwings-automations!")
+</file>
+
+<file path="static/css/style.css">
+
+</file>
+
+<file path="static/js/main.js">
+
+</file>
+
+<file path="templates/manifest.xml">
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+  xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="TaskPaneApp">
+  <Id>{{ manifest_id }}</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>xlwings</ProviderName>
+  <DefaultLocale>en-US</DefaultLocale>
+  <DisplayName DefaultValue="{{ settings.project_name }}{{ ' [' + settings.environment + ']' if settings.environment != 'prod'}}" />
+  <Description DefaultValue="{{ settings.project_name }}{{ ' [' + settings.environment + ']' if settings.environment != 'prod'}}" />
+  <!-- Hosted on the public xlwings.org site so the Office Admin Center can fetch
+       them even when the add-in itself is deployed on a private network. -->
+  <IconUrl DefaultValue="https://www.xlwings.org/xlwings-32.png" />
+  <HighResolutionIconUrl DefaultValue="https://www.xlwings.org/xlwings-64.png" />
+  <SupportUrl DefaultValue="https://www.xlwings.org/contact" />
+  <AppDomains>
+    <AppDomain>{{ base_url_with_app_path }}</AppDomain>
+  </AppDomains>
+  <Hosts>
+    <Host Name="Workbook" />
+  </Hosts>
+  <!-- SharedRuntime for Custom Functions -->
+  <Requirements>
+    <Sets DefaultMinVersion="1.1">
+      <Set Name="SharedRuntime" MinVersion="1.1" />
+    </Sets>
+  </Requirements>
+  <DefaultSettings>
+    <SourceLocation DefaultValue="{{ base_url_with_app_path }}/taskpane.html" />
+  </DefaultSettings>
+  <Permissions>ReadWriteDocument</Permissions>
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="VersionOverridesV1_0">
+    <Hosts>
+      <Host xsi:type="Workbook">
+        <!-- Custom Functions -->
+        <Runtimes>
+          <Runtime resid="Taskpane.Url" lifetime="long" />
+        </Runtimes>
+        <AllFormFactors>
+          <ExtensionPoint xsi:type="CustomFunctions">
+            <Script>
+              <SourceLocation resid="Functions.Script.Url" />
+            </Script>
+            <Page>
+              <SourceLocation resid="Taskpane.Url" />
+            </Page>
+            <Metadata>
+              <SourceLocation resid="Functions.Metadata.Url" />
+            </Metadata>
+            {% if settings.functions_namespace or settings.environment != 'prod' %}
+            <Namespace resid="Functions.Namespace" />
+            {% endif %}
+          </ExtensionPoint>
+        </AllFormFactors>
+
+        <DesktopFormFactor>
+          <!-- FunctionFile is used to bind functions directly to Ribbon buttons -->
+          <FunctionFile resid="Taskpane.Url" />
+          <ExtensionPoint xsi:type="PrimaryCommandSurface">
+            <CustomTab id="MyTab">
+              <Group id="MyCommandsGroup">
+                <Label resid="MyCommandsGroup.Label" />
+                <Icon>
+                  <bt:Image size="16" resid="Icon.16x16" />
+                  <bt:Image size="32" resid="Icon.32x32" />
+                  <bt:Image size="80" resid="Icon.80x80" />
+                </Icon>
+
+                <!-- Ribbon button that calls a function -->
+                <Control xsi:type="Button" id="MyFunctionButton">
+                  <!-- Label for your button. resid must point to a ShortString resource -->
+                  <Label resid="MyFunctionButton.Label" />
+                  <Supertip>
+                    <!-- ToolTip title. resid must point to a ShortString resource -->
+                    <Title resid="MyFunctionButton.Label" />
+                    <!-- ToolTip description. resid must point to a LongString resource -->
+                    <Description resid="MyFunctionButton.Tooltip" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.16x16" />
+                    <bt:Image size="32" resid="Icon.32x32" />
+                    <bt:Image size="80" resid="Icon.80x80" />
+                  </Icon>
+                  <!--Action type must be ExecuteFunction -->
+                  <Action xsi:type="ExecuteFunction">
+                    <!-- This is the name that you use in Office.actions.associate() to connect it to a function -->
+                    <FunctionName>hello-ribbon</FunctionName>
+                  </Action>
+                </Control>
+
+                <!-- Ribbon button that opens the task pane -->
+                <Control xsi:type="Button" id="MyTaskpaneButton">
+                  <Label resid="MyTaskpaneButton.Label" />
+                  <Supertip>
+                    <Title resid="MyTaskpaneButton.Label" />
+                    <Description resid="MyTaskpaneButton.Tooltip" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.16x16" />
+                    <bt:Image size="32" resid="Icon.32x32" />
+                    <bt:Image size="80" resid="Icon.80x80" />
+                  </Icon>
+                  <!-- Action type must be ShowTaskpane -->
+                  <Action xsi:type="ShowTaskpane">
+                    <TaskpaneId>ButtonId1</TaskpaneId>
+                    <!-- resid must point to a Url Resource -->
+                    <SourceLocation resid="Taskpane.Url" />
+                  </Action>
+                </Control>
+              </Group>
+              <Label resid="MyTab.TabLabel" />
+            </CustomTab>
+          </ExtensionPoint>
+        </DesktopFormFactor>
+      </Host>
+    </Hosts>
+
+    <Resources>
+      <bt:Images>
+        <bt:Image id="Icon.16x16" DefaultValue="{{ base_url }}{{ settings.static_url_path }}/images/icons/xlwings-16.png" />
+        <bt:Image id="Icon.32x32" DefaultValue="{{ base_url }}{{ settings.static_url_path }}/images/icons/xlwings-32.png" />
+        <bt:Image id="Icon.80x80" DefaultValue="{{ base_url }}{{ settings.static_url_path }}/images/icons/xlwings-80.png" />
+      </bt:Images>
+      <bt:Urls>
+        <!-- This must point to the HTML document with the task pane -->
+        <bt:Url id="Taskpane.Url" DefaultValue="{{ base_url_with_app_path }}/taskpane.html" />
+        <bt:Url id="Functions.Script.Url" DefaultValue="{{ base_url_with_app_path }}/xlwings/custom-functions-code.js" />
+        <bt:Url id="Functions.Metadata.Url" DefaultValue="{{ base_url_with_app_path }}/xlwings/custom-functions-meta.json" />
+      </bt:Urls>
+      <bt:ShortStrings>
+        {% if settings.functions_namespace or settings.environment != 'prod' %}
+        <bt:String id="Functions.Namespace" DefaultValue="{{ settings.functions_namespace|upper }}{{ '_' if settings.functions_namespace and settings.environment != 'prod'}}{{ settings.environment|upper if settings.environment != 'prod'}}" />
+        {% endif %}
+        <bt:String id="MyTab.TabLabel" DefaultValue="{{ settings.project_name }}{{ ' [' + settings.environment + ']' if settings.environment != 'prod'}}" />
+        <bt:String id="MyCommandsGroup.Label" DefaultValue="MyGroup" />
+        <bt:String id="MyFunctionButton.Label" DefaultValue="Hello World" />
+        <bt:String id="MyTaskpaneButton.Label" DefaultValue="Show Taskpane" />
+      </bt:ShortStrings>
+      <bt:LongStrings>
+        <bt:String id="MyFunctionButton.Tooltip" DefaultValue="Click to call the hello function" />
+        <bt:String id="MyTaskpaneButton.Tooltip" DefaultValue="Click to show the task pane" />
+      </bt:LongStrings>
+    </Resources>
+
+    {% if "entraid" in settings.auth_providers %}
+    <WebApplicationInfo>
+      <Id>{{ settings.auth_entraid_client_id }}</Id>
+      <Resource>api://{{ base_url_with_app_path|replace("https://", "") }}/{{ settings.auth_entraid_client_id }}</Resource>
+      <Scopes>
+        <Scope>openid</Scope>
+        <Scope>profile</Scope>
+      </Scopes>
+    </WebApplicationInfo>
+    {% endif %}
+  </VersionOverrides>
+</OfficeApp>
+</file>
+
+<file path="templates/taskpane.html">
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid pt-3 ps-3">
+    <h1>{{ settings.project_name }}</h1>
+    <button xw-click="hello_world" class="btn btn-primary btn-sm" type="button">
+    Write 'Hello/Bye xlwings!' to A1
+    </button>
+</div>
+{% endblock content %}
+</file>
+
+<file path=".dockerignore">
+.git
+.gitignore
+.python-version
+.venv
+.env
+.env.*
+*.pyc
+__pycache__
+*.egg-info
+.DS_Store
+certs/
+Dockerfile
+.dockerignore
+*.local.*
+</file>
+
+<file path=".gitignore">
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# xlwings-server
+.env
+certs/
+*.pem
+</file>
+
+<file path=".python-version">
+3.14
+</file>
+
+<file path="docker-compose.yaml">
+# This is for local development
+services:
+  xlwings-server:
+    build: .
+    # Allow the server to run with or without certs
+    command: >
+      sh -c '
+        SSL_OPTS=""
+        if [ -f /app/certs/localhost+2-key.pem ] && [ -f /app/certs/localhost+2.pem ]; then
+          SSL_OPTS="--ssl-keyfile /app/certs/localhost+2-key.pem --ssl-certfile /app/certs/localhost+2.pem"
+        fi
+        exec uvicorn \
+          --host 0.0.0.0 \
+          --port 8000 \
+          --reload \
+          --access-log \
+          $$SSL_OPTS \
+          xlwings_server.main:main_app
+      '
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    restart: "no"
+    init: true  # Helps with reload
+    volumes:
+      - ./certs:/app/certs
+      - ./custom_functions:/app/custom_functions
+      - ./custom_scripts:/app/custom_scripts
+      - ./static:/app/static
+      - ./templates:/app/templates
+</file>
+
+<file path="Dockerfile">
+# Dockerfile for xlwings Server
+# Use a Python image with uv pre-installed
+FROM ghcr.io/astral-sh/uv:0.9.26-python3.14-trixie-slim
+
+# Setup a non-root user
+RUN groupadd --system --gid 999 nonroot \
+    && useradd --system --gid 999 --uid 999 --create-home nonroot
+
+# Install the project into `/app`
+WORKDIR /app
+
+# Enable bytecode compilation
+ENV UV_COMPILE_BYTECODE=1
+
+# Copy from the cache instead of linking since it's a mounted volume
+ENV UV_LINK_MODE=copy
+
+# Ensure installed tools can be executed out of the box
+ENV UV_TOOL_BIN_DIR=/usr/local/bin
+
+# Copy dependency files first for better layer caching
+COPY pyproject.toml uv.lock ./
+
+# Install the project's dependencies using the lockfile and settings
+RUN uv sync --locked --no-install-project --no-dev
+
+# Then, add the rest of the project source code and install it
+# Installing separately from its dependencies allows optimal layer caching
+COPY . /app
+RUN uv sync --locked --no-dev
+
+# Build static files with hashed filenames for cache-busting
+RUN uv run xlwings-server build static
+
+# Place executables in the environment at the front of the path
+ENV PATH="/app/.venv/bin:$PATH"
+
+# Show logs immediately
+ENV PYTHONUNBUFFERED=1
+
+# Required if WORKDIR isn't /app
+ENV XLWINGS_PROJECT_DIR=/app
+
+# Default port and workers
+ENV PORT=8000
+ENV WORKERS=1
+EXPOSE 8000
+
+# Reset the entrypoint, don't invoke `uv`
+ENTRYPOINT []
+
+# Use the non-root user to run our application
+USER nonroot
+
+# Uses shell to set PORT and WORKERS, then exec for proper signal handling
+CMD ["sh", "-c", "\
+    exec uvicorn \
+    --host 0.0.0.0 \
+    --port $PORT \
+    --workers $WORKERS \
+    --access-log \
+    xlwings_server.main:main_app \
+    "]
+</file>
+
+<file path="pyproject.toml">
+[project]
+name = "tl-xlwings-automations"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Liam", email = "95653151+lla1dlaw@users.noreply.github.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "xlwings-server>=1.11.0",
+]
+
+[project.scripts]
+tl-xlwings-automations = "tl_xlwings_automations:main"
+
+[build-system]
+requires = ["uv_build>=0.12.1,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.xlwings_server]
+manifest_id_dev = "4fcd1317-6a2f-4a9a-af5e-a6cd27492c5e"
+manifest_id_qa = "2fb8e5f3-d057-4885-b647-686d658b9151"
+manifest_id_uat = "35a6e2f1-4d6c-4608-9017-2e7f26d1b5d5"
+manifest_id_staging = "277d361c-b8fc-4855-bcb7-3bee43f3cdc3"
+manifest_id_prod = "836c5cfa-6ceb-4742-a99b-5161272f5b74"
+</file>
+
+<file path="README.md">
+
+</file>
+
+</files>

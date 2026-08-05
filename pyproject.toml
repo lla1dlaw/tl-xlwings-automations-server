@@ -1,0 +1,26 @@
+[project]
+name = "tl-xlwings-automations"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Liam", email = "95653151+lla1dlaw@users.noreply.github.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "xlwings-server>=1.11.0",
+]
+
+[project.scripts]
+tl-xlwings-automations = "tl_xlwings_automations:main"
+
+[build-system]
+requires = ["uv_build>=0.12.1,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.xlwings_server]
+manifest_id_dev = "4fcd1317-6a2f-4a9a-af5e-a6cd27492c5e"
+manifest_id_qa = "2fb8e5f3-d057-4885-b647-686d658b9151"
+manifest_id_uat = "35a6e2f1-4d6c-4608-9017-2e7f26d1b5d5"
+manifest_id_staging = "277d361c-b8fc-4855-bcb7-3bee43f3cdc3"
+manifest_id_prod = "836c5cfa-6ceb-4742-a99b-5161272f5b74"
