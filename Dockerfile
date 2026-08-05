@@ -21,13 +21,12 @@ ENV UV_TOOL_BIN_DIR=/usr/local/bin
 # Copy dependency files first for better layer caching
 COPY pyproject.toml uv.lock ./
 
+
+# add the rest of the project source code
+COPY . /app
+
 # Install the project's dependencies using the lockfile and settings
 RUN uv sync --locked --no-install-project --no-dev
-
-# Then, add the rest of the project source code and install it
-# Installing separately from its dependencies allows optimal layer caching
-COPY . /app
-RUN uv sync --locked --no-dev
 
 # Build static files with hashed filenames for cache-busting
 RUN uv run xlwings-server build static

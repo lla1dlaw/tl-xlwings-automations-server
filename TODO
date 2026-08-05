@@ -1,0 +1,3 @@
+Last thing I did: move models, qb_utils, and excel_utils to src/ directory: 
+	- Consider changing src/ to "custom data" or something of the sort
+	- Next up: Instansiate the ExcelHandler and QBHandler objects and test their functionality by calling their functions in a @script

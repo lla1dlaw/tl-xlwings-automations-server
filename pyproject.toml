@@ -8,15 +8,12 @@ authors = [
 ]
 requires-python = ">=3.14"
 dependencies = [
+    "httpx>=0.28.1",
+    "intuit-oauth>=1.2.6",
+    "python-quickbooks>=0.9.12",
     "xlwings-server>=1.11.0",
 ]
 
-[project.scripts]
-tl-xlwings-automations = "tl_xlwings_automations:main"
-
-[build-system]
-requires = ["uv_build>=0.12.1,<0.13.0"]
-build-backend = "uv_build"
 
 [tool.xlwings_server]
 manifest_id_dev = "4fcd1317-6a2f-4a9a-af5e-a6cd27492c5e"
