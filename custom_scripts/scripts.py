@@ -7,9 +7,12 @@ from src.qb_utils import QBHandler
 
 @script(name="Create QB Estimate")
 def create_estimate(book: xw.Book):
-    qbhandler = QBHandler()
-    xlhandler = ExcelHandler(qb_handler=qbhandler)
-    xlhandler.push_estimate_from_excel(book)
+    try: 
+        qbhandler = QBHandler()
+        xlhandler = ExcelHandler(qb_handler=qbhandler)
+        xlhandler.push_estimate_from_excel(book)
+    except Exception as e:
+        pass 
 
 @script
 def hello_world(book: xw.Book):
