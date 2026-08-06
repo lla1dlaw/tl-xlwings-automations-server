@@ -40,6 +40,9 @@ ENV PYTHONUNBUFFERED=1
 # Required if WORKDIR isn't /app
 ENV XLWINGS_PROJECT_DIR=/app
 
+# Allow CORS for Excel on the web
+ENV XLWINGS_CORS_ALLOW_ORIGINS='["*"]'
+
 # Default port and workers
 ENV PORT=8000
 ENV WORKERS=1
