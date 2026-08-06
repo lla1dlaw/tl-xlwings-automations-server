@@ -1,17 +1,20 @@
 services:
   xlwings-server:
     build: .
+    command: >
+       sh -c '
+         exec uvicorn \
+           --host 0.0.0.0 \
+           --port 8000 \
+           --workers 1 \
+           --proxy-headers \
+           --forwarded-allow-ips="*" \
+           --access-log \
+           xlwings_server.main:main_app
+       '
+    ports:
+      - "8000:8000"
     env_file:
       - .env
     restart: "unless-stopped"
-    init: true
 
-  caddy:
-    image: caddy:2
-    restart: "unless-stopped"
-    ports:
-      # Expose standard HTTP and HTTPS ports to the internet
-      - "80:80"
-      - "443:443"
-    # Docker-compose will automatically pull ${DOMAIN} from your .env file
-    command: caddy reverse-proxy --from https://${DOMAIN} --to http://xlwings-server:8000
