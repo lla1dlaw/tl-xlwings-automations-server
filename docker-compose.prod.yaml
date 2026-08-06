@@ -6,12 +6,12 @@ services:
     restart: "unless-stopped"
     init: true
 
-caddy:
-  image: caddy:2
-  restart: "unless-stopped"
-  ports:
-    # Expose standard HTTP and HTTPS ports to the internet
-    - "80:80"
-    - "443:443"
-  # Docker-compose will automatically pull ${DOMAIN} from your .env file
-  command: caddy reverse-proxy --from https://${DOMAIN} --to http://xlwings-server:8000
+  caddy:
+    image: caddy:2
+    restart: "unless-stopped"
+    ports:
+      # Expose standard HTTP and HTTPS ports to the internet
+      - "80:80"
+      - "443:443"
+    # Docker-compose will automatically pull ${DOMAIN} from your .env file
+    command: caddy reverse-proxy --from https://${DOMAIN} --to http://xlwings-server:8000
