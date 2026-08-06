@@ -5,7 +5,7 @@ from src.excel_utils import ExcelHandler
 from src.qb_utils import QBHandler
 
 
-@script
+@script(name="Create QB Estimate")
 def create_estimate(book: xw.Book):
     qbhandler = QBHandler()
     xlhandler = ExcelHandler(qb_handler=qbhandler)
